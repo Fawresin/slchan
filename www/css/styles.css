@@ -1,0 +1,68 @@
+body {
+    background-color: #191718;
+    color: #FEFCFA;
+}
+
+hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+a:link {
+    color: #6C7CC9;
+}
+
+a:visited {
+    color: #5F8EB3;
+}
+
+a:hover {
+    color: #97B3B0;
+}
+
+header {
+    text-align: center;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    font-style: italic;
+}
+
+.container {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#post-form-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#post-form-table td {
+    vertical-align: top;
+}
+
+.post {
+    background-color: #1B2D38;
+    max-width: 70%;
+    padding: 5px;
+    border: 1px solid #5b7a80;
+    margin-bottom: 5px;
+
+}
+
+.post-subject {
+    font-style: italic;
+}
+
+.post-name {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.post-body {
+    padding: 5px;
+}

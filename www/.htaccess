@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^post/?$ /index.php?action=post [L]
+RewriteRule ^thread/?(.+)/?$ /index.php?action=thread&id=$1 [L]
+RewriteRule ^testban/?$ /index.php?action=testban [L]
+RewriteRule ^([a-zA-Z0-9_]+)$ /index.php?p=$1 [L]
