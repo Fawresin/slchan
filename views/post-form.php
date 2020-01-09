@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td><label for="upload">File:</label></td>
-                <td><input id="upload" type="file" name="file"></td>
+                <td><input id="upload" type="file" name="file" disabled></td>
             </tr>
             <tr>
                 <td><label for="txt-password">Password:</label></td>
