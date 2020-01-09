@@ -3,7 +3,7 @@
 class BanModel {
     const TABLE = 'bans';
 
-    public function insert(string $ip_address, string $reason, int $created, ?int $expires, ?string $post_id)
+    public function insert(string $ip_address, string $reason, int $created, int $expires = null, string $post_id = null)
     {
         $pdo = NuPDO::getInstance();
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE . '(ip_address, reason, created, expires, post_id) VALUES(?, ?, ?, ?, ?)');

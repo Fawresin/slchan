@@ -4,7 +4,7 @@ declare(strict_types=1);
 class PostModel {
     const TABLE = 'posts';
 
-    public function insert(string $name, string $subject, int $created, int $last_updated, string $message, ?string $file_id, string $ip_address, string $password, ?string $parent_id, bool $hidden): string {
+    public function insert(string $name, string $subject, int $created, int $last_updated, string $message, string $file_id = null, string $ip_address, string $password, string $parent_id = null, bool $hidden): string {
         $pdo = NuPDO::getInstance();
         $pdo->beginTransaction();
         try {

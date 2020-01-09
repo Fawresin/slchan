@@ -5,7 +5,7 @@ class NuPDO extends PDO {
 
     private static $_totalQueries = 0;
 
-    private function __construct(string $dsn, ?string $user = null, ?string $password = null, array $options = array()) {
+    private function __construct(string $dsn, string $user = null, string $password = null, array $options = array()) {
         parent::__construct($dsn, $user, $password, $options);
     }
 
