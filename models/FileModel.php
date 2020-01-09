@@ -1,7 +1,7 @@
 <?php
 
 class FileModel {
-    public const TABLE = 'files';
+    const TABLE = 'files';
 
     public function insert(string $name, int $size, string $extension, int $width, int $height, string $hash, int $created, ?string $post_id, string $ip_address): string {
         $pdo = NuPDO::getInstance();

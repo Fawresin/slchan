@@ -1,7 +1,7 @@
 <?php
 
 class BanModel {
-    public const TABLE = 'bans';
+    const TABLE = 'bans';
 
     public function insert(string $ip_address, string $reason, int $created, ?int $expires, ?string $post_id)
     {

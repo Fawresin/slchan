@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 class PostModel {
-    public const TABLE = 'posts';
+    const TABLE = 'posts';
 
     public function insert(string $name, string $subject, int $created, int $last_updated, string $message, ?string $file_id, string $ip_address, string $password, ?string $parent_id, bool $hidden): string {
         $pdo = NuPDO::getInstance();
