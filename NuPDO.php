@@ -5,7 +5,9 @@ class NuPDO extends PDO {
 
     private static $_totalQueries = 0;
 
-    private function __construct(string $dsn, string $user = null, string $password = null, array $options = array()) {
+    // Do not use the constructor! Use getInstance() instead.
+    // Can't have it private in older versions of PHP it seems.
+    public function __construct(string $dsn, string $user = null, string $password = null, array $options = array()) {
         parent::__construct($dsn, $user, $password, $options);
     }
 
