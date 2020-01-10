@@ -5,6 +5,8 @@ class MainController extends BaseController {
     public $title = 'Main';
 
     public $threads;
+    public $threadCount;
+    public $currentPage;
 
     protected static function getView(): string {
         return 'index.php';
@@ -12,9 +14,21 @@ class MainController extends BaseController {
 
     public function run() {
         $page = array_get_item('p', $_GET);
-        $offset = ($page !== null) ? abs(THREADS_PER_PAGE * (int)$page) : 0;
-        $posts_model = new PostModel();
-        $parents = $posts_model->getParents(THREADS_PER_PAGE, $offset);
+        if ($page !== null) {
+            $page_int = (int)$page;
+            if ($page_int > 0) {
+                --$page_int;
+            }
+
+            $page = abs($page_int);
+        }
+        else {
+            $page = 0;
+        }
+
+        $offset = THREADS_PER_PAGE * $page;
+        $post_model = new PostModel();
+        $parents = $post_model->getParents(THREADS_PER_PAGE, $offset);
         $parent_ids = array();
         $threads = array();
         $threads_in_order = array();
@@ -28,19 +42,21 @@ class MainController extends BaseController {
             $threads_in_order[] = &$threads[$post['id']];
         }
 
-        $children = $posts_model->getChildren($parent_ids, POSTS_PER_PREVIEW);
+        $children = $post_model->getChildren($parent_ids, POSTS_PER_PREVIEW);
         $i = count($children);
         while (--$i > -1) {
             $post = $children[$i];
             $threads[$post['parent_id']]['children'][] = $post;
         }
 
-        $child_counts = $posts_model->getChildCount($parent_ids);
+        $child_counts = $post_model->getChildCount($parent_ids);
         foreach ($child_counts as $c) {
             $threads[$c['parent_id']]['post_count'] = $c['total'];
         }
 
         $this->threads = $threads_in_order;
+        $this->threadCount = (int)$post_model->getThreadCount();
+        $this->currentPage = $page;
         $this->showView();
     }
 }

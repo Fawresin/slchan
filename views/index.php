@@ -1,4 +1,23 @@
 <?php include(join_paths(DIR_VIEWS, 'post-form.php')); ?>
+<?php
+    $pagination = 'Pages: <ul class="pagination">';
+    $total_pages = ($this->threadCount > 0) ? ceil($this->threadCount / (float)THREADS_PER_PAGE) : 1;
+    for($i=0; $i<$total_pages; ++$i) {
+        $page = $i + 1;
+        $item = '<li>';
+        if ($i === $this->currentPage) {
+            $item .= $page;
+        }
+        else {
+            $item .= '<a href="/' . $page . '">' . $page . '</a>';
+        }
+        $item .= '</li>';
+        $pagination .= $item;
+    }
+    $pagination .= '</ul>';
+
+    echo $pagination;
+?>
 <hr>
 <?php foreach ($this->threads as $thread): ?>
     <?php $parent = $thread['parent'] ?>
@@ -53,3 +72,4 @@
     <br class="clear">
     <hr>
 <?php endforeach ?>
+<?php echo $pagination ?>

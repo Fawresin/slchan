@@ -82,3 +82,17 @@ footer {
 .greentext {
     color: #789922;
 }
+
+ul.pagination {
+    list-style-type: none;
+    display: inline-block;
+    padding-left: 10px;
+}
+
+ul.pagination li {
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid #5b7a80;
+    background-color: #1B2D38;
+    padding: 3px 10px;
+}

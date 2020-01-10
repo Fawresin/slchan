@@ -37,8 +37,8 @@ class NuPDO extends PDO {
         return parent::prepare($statement, $driver_options);
     }
 
-    public function query($statement, $fetch_style = null, $arg3 = null, $arg4 = null): PDOStatement {
+    public function query(...$args): PDOStatement {
         RuntimeStats::incrementTotalQueries();
-        return parent::query($statement, $fetch_style, $arg3, $arg4);
+        return parent::query(...$args);
     }
 }

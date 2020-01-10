@@ -142,4 +142,11 @@ class PostModel {
         $stmt->execute(array($ip_address));
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getThreadCount() {
+        $pdo = NuPDO::getInstance();
+        $query = 'SELECT COUNT(*) FROM ' . self::TABLE . ' WHERE parent_id IS NULL AND hidden = FALSE';
+        $stmt = $pdo->query($query);
+        return $stmt->fetchColumn();
+    }
 }
