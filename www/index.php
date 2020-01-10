@@ -48,6 +48,15 @@ function array_get_item($key, array $arr) {
     return null;
 }
 
+function process_post_message($message): string {
+    if (!is_string($message))
+        return '';
+
+    $processed = htmlentities($message);
+    $processed = str_replace("\n", "<br>", $processed);
+    return $processed;
+}
+
 $action = array_get_item('action', $_GET);
 $controller = null;
 switch ($action) {

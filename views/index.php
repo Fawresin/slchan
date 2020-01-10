@@ -22,7 +22,7 @@
             <span class="post-date" data-time="<?php echo $parent['created'] ?>"></span>
         </p>
         <div class="post-body">
-            <?php echo htmlentities($parent['message']) ?>
+            <?php echo process_post_message($parent['message']) ?>
         </div>
     </div>
     <?php foreach ($thread['children'] as $child): ?>
@@ -46,7 +46,7 @@
                 <span class="post-date" data-time="<?php echo $child['created'] ?>"></span>
             </p>
             <div class="post-body">
-                <?php echo htmlentities($child['message']) ?>
+                <?php echo process_post_message($child['message']) ?>
             </div>
         </div>
     <?php endforeach ?>

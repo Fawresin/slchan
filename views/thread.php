@@ -24,7 +24,7 @@
             <span class="post-date" data-time="<?php echo $post['created'] ?>"></span>
         </p>
         <div class="post-body">
-            <?php echo htmlentities($post['message']); ?>
+            <?php echo process_post_message($post['message']); ?>
         </div>
     </div>
     <br class="clear">
