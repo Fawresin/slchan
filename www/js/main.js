@@ -105,7 +105,7 @@
                         link = '<a href="/thread/' + element.parentElement.dataset.parentId + '#' + id + '">&gt;&gt;' + id + '</a>';
                     }
                     else {
-                        link = '<a href="#">' + '&gt;&gt;' + id + '</a>';
+                        link = '<a href="#' + id + '">' + '&gt;&gt;' + id + '</a>';
                     }
                     html += text.substring(start_index, index) + link;
                     start_index = white_space_index;
@@ -132,13 +132,7 @@
 
         $$('a[href="#"]').each(function(element) {
             $$(element).on('click', function(event) {
-                if (element.innerText.indexOf('>>') === 0) {
-                    var href = document.location.href;
-                    document.location.href = href.substring(0, href.indexOf('#')) + '#' + element.innerText.substr(2);
-                }
-                else {
-                    $$('#txt-message').first().get().textContent += '>>' + element.dataset.id + '\n';
-                }
+                $$('#txt-message').first().get().textContent += '>>' + element.dataset.id + '\n';
             });
         });
     });
