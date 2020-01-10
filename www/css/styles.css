@@ -78,3 +78,7 @@ footer {
 .clear {
     clear: both;
 }
+
+.greentext {
+    color: #789922;
+}

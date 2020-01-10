@@ -2,7 +2,7 @@
 <hr>
 <?php foreach ($this->threads as $thread): ?>
     <?php $parent = $thread['parent'] ?>
-    <div class="post">
+    <div class="post" data-parent-id="<?php echo $parent['id'] ?>">
         <?php if ($parent['file_id'] !== null): ?>
             <div class="file">
                 <p class="file-info">
@@ -26,7 +26,7 @@
         </div>
     </div>
     <?php foreach ($thread['children'] as $child): ?>
-        <div class="post">
+        <div class="post" data-parent-id="<?php echo $parent['id']?>">
             <?php if ($child['file_id'] !== null): ?>
                 <div class="file">
                     <p class="file-info">
