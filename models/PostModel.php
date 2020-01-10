@@ -46,34 +46,35 @@ class PostModel {
         return $last_id;
     }
 
-    public function getByParentId(string $parent_id): array {
+    public function getByParentId(string $parent_id, bool $hidden = false): array {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
         $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
-            WHERE $posts.parent_id = ?
+            WHERE $posts.parent_id = ? AND $posts.hidden = ?
             ORDER BY $posts.created ASC");
-        $stmt->execute(array($parent_id));
+        $stmt->execute(array($parent_id, $hidden));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getParents(int $limit, int $offset): array {
+    public function getParents(int $limit, int $offset, bool $hidden = false): array {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
         $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
-            WHERE $posts.parent_id IS NULL
+            WHERE $posts.parent_id IS NULL AND $posts.hidden = ?
             ORDER BY $posts.last_updated DESC
             LIMIT ?, ?");
-        $stmt->bindValue(1, $offset, PDO::PARAM_INT);
-        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->bindValue(1, $hidden);
+        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $stmt->bindValue(3, $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getChildren(array $ids, int $limit) {
+    public function getChildren(array $ids, int $limit, bool $hidden = false) {
         $ids_length = count($ids);
         if ($ids_length === 0) {
             return array();
@@ -89,6 +90,7 @@ class PostModel {
             $query .= "?,";
         }
         $query = substr($query, 0, -1) . ")
+        AND $posts.hidden = ?
         ORDER BY $posts.parent_id, $posts.created DESC
         LIMIT ?";
 
@@ -96,12 +98,13 @@ class PostModel {
         for ($i=0; $i<$ids_length; ++$i) {
             $stmt->bindValue($i + 1, $ids[$i]);
         }
-        $stmt->bindValue($i + 1, $limit, PDO::PARAM_INT);
+        $stmt->bindValue($i + 1, $hidden);
+        $stmt->bindValue($i + 2, $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getChildCount(array $ids): array {
+    public function getChildCount(array $ids, bool $hidden = false): array {
         $ids_length = count($ids);
         if ($ids_length === 0) {
             return array();
@@ -115,22 +118,23 @@ class PostModel {
             $query .= "?,";
         }
 
-        $query = substr($query, 0, -1) . ") GROUP BY $posts.parent_id";
+        $query = substr($query, 0, -1) . ") AND $posts.hidden = ? GROUP BY $posts.parent_id";
         $stmt = $pdo->prepare($query);
-        $stmt->execute($ids);
+        $stmt->execute(array_merge($ids, array($hidden)));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getThread(string $id) {
+    public function getThread(string $id, bool $hidden = false) {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
         $query = "SELECT $posts.*, $files.name AS file_name, $files.size AS file_size, $files.extension as file_extension, $files.width as file_width, $files.height as file_height FROM $posts
         LEFT JOIN $files ON $posts.file_id = $files.id
-        WHERE ($posts.id = :id AND $posts.parent_id IS NULL) OR ($posts.parent_id = :id)
+        WHERE (($posts.id = :id AND $posts.parent_id IS NULL) OR ($posts.parent_id = :id)) AND $posts.hidden = :hidden
         ORDER BY $posts.created ASC";
         $stmt = $pdo->prepare($query);
         $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':hidden', $hidden);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -143,10 +147,11 @@ class PostModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getThreadCount() {
+    public function getThreadCount(bool $hidden = false) {
         $pdo = NuPDO::getInstance();
-        $query = 'SELECT COUNT(*) FROM ' . self::TABLE . ' WHERE parent_id IS NULL AND hidden = FALSE';
-        $stmt = $pdo->query($query);
+        $query = 'SELECT COUNT(*) FROM ' . self::TABLE . ' WHERE parent_id IS NULL AND hidden = ?';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(array($hidden));
         return $stmt->fetchColumn();
     }
 }
