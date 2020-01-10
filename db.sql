@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS files(
     height BIGINT UNSIGNED NOT NULL,
     hash VARCHAR(64) NOT NULL,
     created INT(11) UNSIGNED NOT NULL,
-    post_id BIGINT UNSIGNED DEFAULT NULL,
     ip_address VARCHAR(45) NOT NULL,
     CONSTRAINT uc_files_hash UNIQUE (hash)
 ) ENGINE=InnoDB;

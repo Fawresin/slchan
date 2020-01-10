@@ -1,4 +1,4 @@
-<form method="POST" action="/post">
+<form method="POST" action="/post" enctype="multipart/form-data">
     <?php if (isset($this->thread_id)): ?>
         <input type="hidden" name="thread_id" value="<?php echo $this->thread_id ?>">
     <?php endif ?>
@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td><label for="upload">File:</label></td>
-                <td><input id="upload" type="file" name="file" disabled></td>
+                <td><input id="upload" type="file" name="file"></td>
             </tr>
             <tr>
                 <td><label for="txt-password">Password:</label></td>

@@ -4,9 +4,11 @@ declare(strict_types=1);
 class PostModel {
     const TABLE = 'posts';
 
-    public function insert(string $name, string $subject, int $created, int $last_updated, string $message, string $file_id = null, string $ip_address, string $password, string $parent_id = null, bool $hidden): string {
+    public function insert(string $name, string $subject, int $created, int $last_updated, string $message, string $file_id = null, string $ip_address, string $password, string $parent_id = null, bool $hidden, bool $commit = true): string {
         $pdo = NuPDO::getInstance();
-        $pdo->beginTransaction();
+        if ($commit)
+            $pdo->beginTransaction();
+
         try {
             $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE . '(name, subject, created, last_updated, message, file_id, ip_address, password, parent_id, hidden) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
             $stmt->execute(array(
@@ -33,10 +35,12 @@ class PostModel {
                 ));
             }
 
-            $pdo->commit();
+            if ($commit)
+                $pdo->commit();
         }
         catch (Exception $e) {
-            $pdo->rollback();
+            if ($commit)
+                $pdo->rollback();
         }
 
         return $last_id;
@@ -46,7 +50,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $stmt = $pdo->prepare("SELECT $posts.*, $files.name AS file_name, $files.size AS file_size FROM $posts
+        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id = ?
             ORDER BY $posts.created ASC");
@@ -58,7 +62,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $stmt = $pdo->prepare("SELECT $posts.*, $files.name AS file_name, $files.size AS file_size FROM $posts
+        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id IS NULL
             ORDER BY $posts.last_updated DESC
@@ -78,7 +82,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $query = "SELECT $posts.*, $files.name AS file_name, $files.size AS file_size, $files.extension as file_extension, $files.width as file_width, $files.height as file_height FROM $posts
+        $query = "SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id IN ( ";
         for ($i=0; $i<$ids_length; ++$i) {
