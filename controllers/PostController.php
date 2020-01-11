@@ -41,16 +41,16 @@ class PostController extends BaseController {
             throw new Exception('Files cannot be larger than ' . number_format(MAX_UPLOAD_FILE_SIZE_KB) . 'KB');
         }
 
-        $width = $orig_width;
-        $height = $orig_height;
-        if ($height > THUMBNAIL_MAX_DIMENSION_SIZE) {
-            $width = (THUMBNAIL_MAX_DIMENSION_SIZE / $height) * $width;
-            $height = THUMBNAIL_MAX_DIMENSION_SIZE;
+        $thumbnail_width = 0;
+        $thumbnail_height = 0;
+        $aspect_ratio = $orig_width / $orig_height;
+        if ($orig_height > $orig_width) {
+            $thumbnail_height = THUMBNAIL_MAX_DIMENSION_SIZE;
+            $thumbnail_width = $thumbnail_height * $aspect_ratio;
         }
-
-        if ($width > THUMBNAIL_MAX_DIMENSION_SIZE) {
-            $height = (THUMBNAIL_MAX_DIMENSION_SIZE / $width) * $height;
-            $width = THUMBNAIL_MAX_DIMENSION_SIZE;
+        else {
+            $thumbnail_width = THUMBNAIL_MAX_DIMENSION_SIZE;
+            $thumbnail_height = $thumbnail_width / $aspect_ratio;
         }
 
         $image = null;
@@ -76,12 +76,12 @@ class PostController extends BaseController {
             throw new Exception('There was an error with that image.');
         }
 
-        $thumbnail = imagecreatetruecolor($width, $height);
-        if ($thumbnail === false || !imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height)) {
+        $thumbnail = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+        if ($thumbnail === false || !imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $orig_width, $orig_height)) {
             throw new Exception('There was an error resizing the image.');
         }
 
-        $file_id = $file_model->insert($orig_filename, $file_size, $ext, $width, $height, $hash, time(), $_SERVER['REMOTE_ADDR']);
+        $file_id = $file_model->insert($orig_filename, $file_size, $ext, $thumbnail_width, $thumbnail_height, $hash, time(), $_SERVER['REMOTE_ADDR']);
 
         if (!file_exists(DIR_IMAGES)) {
             if (!mkdir(DIR_IMAGES, 0777, true)) {
