@@ -88,27 +88,30 @@ class PostController extends BaseController {
             }
         }
 
-        $thumbnail_filename = join_paths(DIR_IMAGES, 't' . $file_id . '.' . $ext);
-        $filename = join_paths(DIR_IMAGES, $file_id . '.' . $ext);
         switch($type) {
             case IMAGETYPE_GIF:
-                imagegif($thumbnail, $thumbnail_filename);
+                imagegif($thumbnail, 't' . $tmp_filename);
                 move_uploaded_file($tmp_filename, $filename);
                 break;
             case IMAGETYPE_JPEG:
-                imagejpeg($thumbnail, $thumbnail_filename, 100);
-                imagejpeg($image, $filename, 100);
+                imagejpeg($thumbnail, 't' . $tmp_filename, 100);
+                imagejpeg($image, $tmp_filename, 100);
                 break;
             case IMAGETYPE_PNG:
-                imagepng($thumbnail, $thumbnail_filename);
-                imagepng($image, $filename);
+                imagepng($thumbnail, 't' . $tmp_filename);
+                imagepng($image, $tmp_filename);
                 break;
         }
 
         // Update the file size since it might have become more compressed
-        $file_size = @filesize($filename);
+        $file_size = @filesize($tmp_filename);
 
         $file_id = $file_model->insert($orig_filename, $file_size, $ext, $orig_width, $orig_height, $thumbnail_width, $thumbnail_height, $hash, time(), $_SERVER['REMOTE_ADDR']);
+
+        $thumbnail_filename = join_paths(DIR_IMAGES, 't' . $file_id . '.' . $ext);
+        $filename = join_paths(DIR_IMAGES, $file_id . '.' . $ext);
+        rename('t' . $tmp_filename, $thumbnail_filename);
+        rename($tmp_filename, $filename);
 
         $this->fileId = $file_id;
     }
