@@ -11,18 +11,17 @@ class PostModel {
 
         try {
             $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE . '(name, subject, created, last_updated, message, file_id, ip_address, password, parent_id, hidden) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute(array(
-                $name,
-                $subject,
-                $created,
-                $last_updated,
-                $message,
-                $file_id,
-                $ip_address,
-                $password,
-                $parent_id,
-                (int)$hidden
-            ));
+            $stmt->bindValue(1, $name);
+            $stmt->bindValue(2, $subject);
+            $stmt->bindValue(3, $created);
+            $stmt->bindValue(4, $last_updated);
+            $stmt->bindValue(5, $message);
+            $stmt->bindValue(6, $file_id);
+            $stmt->bindValue(7, $ip_address);
+            $stmt->bindValue(8, $password);
+            $stmt->bindValue(9, $parent_id);
+            $stmt->bindValue(10, $hidden, PDO::PARAM_BOOL);
+            $stmt->execute();
 
             $last_id = $pdo->lastInsertId();
 
@@ -54,7 +53,9 @@ class PostModel {
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id = ? AND $posts.hidden = ?
             ORDER BY $posts.created ASC");
-        $stmt->execute(array($parent_id, $hidden));
+        $stmt->bindValue(1, $parent_id);
+        $stmt->bindValue(2, $hidden, PDO::PARAM_BOOL);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -67,14 +68,14 @@ class PostModel {
             WHERE $posts.parent_id IS NULL AND $posts.hidden = ?
             ORDER BY $posts.last_updated DESC
             LIMIT ?, ?");
-        $stmt->bindValue(1, $hidden);
+        $stmt->bindValue(1, $hidden, PDO::PARAM_BOOL);
         $stmt->bindValue(2, $offset, PDO::PARAM_INT);
         $stmt->bindValue(3, $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getChildren(array $ids, int $limit, bool $hidden = false) {
+    public function getChildren(array $ids, bool $hidden = false) {
         $ids_length = count($ids);
         if ($ids_length === 0) {
             return array();
@@ -91,15 +92,13 @@ class PostModel {
         }
         $query = substr($query, 0, -1) . ")
         AND $posts.hidden = ?
-        ORDER BY $posts.parent_id, $posts.created DESC
-        LIMIT ?";
+        ORDER BY $posts.parent_id, $posts.created DESC";
 
         $stmt = $pdo->prepare($query);
         for ($i=0; $i<$ids_length; ++$i) {
             $stmt->bindValue($i + 1, $ids[$i]);
         }
-        $stmt->bindValue($i + 1, $hidden);
-        $stmt->bindValue($i + 2, $limit, PDO::PARAM_INT);
+        $stmt->bindValue($i + 1, $hidden, PDO::PARAM_BOOL);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -120,7 +119,11 @@ class PostModel {
 
         $query = substr($query, 0, -1) . ") AND $posts.hidden = ? GROUP BY $posts.parent_id";
         $stmt = $pdo->prepare($query);
-        $stmt->execute(array_merge($ids, array($hidden)));
+        for ($i=0; $i<$ids_length; ++$i) {
+            $stmt->bindValue($i + 1, $ids[$i]);
+        }
+        $stmt->bindValue($i + 1, $hidden, PDO::PARAM_BOOL);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -130,11 +133,11 @@ class PostModel {
         $files = FileModel::TABLE;
         $query = "SELECT $posts.*, $files.name AS file_name, $files.size AS file_size, $files.extension as file_extension, $files.width as file_width, $files.height as file_height FROM $posts
         LEFT JOIN $files ON $posts.file_id = $files.id
-        WHERE (($posts.id = :id AND $posts.parent_id IS NULL) OR ($posts.parent_id = :id)) AND $posts.hidden = :hidden
+        WHERE ($posts.id = :id OR $posts.parent_id = :id) AND $posts.hidden = :hidden
         ORDER BY $posts.created ASC";
         $stmt = $pdo->prepare($query);
         $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':hidden', $hidden);
+        $stmt->bindValue(':hidden', $hidden, PDO::PARAM_BOOL);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -151,7 +154,8 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $query = 'SELECT COUNT(*) FROM ' . self::TABLE . ' WHERE parent_id IS NULL AND hidden = ?';
         $stmt = $pdo->prepare($query);
-        $stmt->execute(array($hidden));
+        $stmt->bindValue(1, $hidden, PDO::PARAM_BOOL);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
 }

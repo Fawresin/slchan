@@ -42,11 +42,12 @@ class MainController extends BaseController {
             $threads_in_order[] = &$threads[$post['id']];
         }
 
-        $children = $post_model->getChildren($parent_ids, POSTS_PER_PREVIEW);
+        $children = $post_model->getChildren($parent_ids);
         $i = count($children);
         while (--$i > -1) {
             $post = $children[$i];
-            $threads[$post['parent_id']]['children'][] = $post;
+            if (count($threads[$post['parent_id']]['children']) < POSTS_PER_PREVIEW)
+                $threads[$post['parent_id']]['children'][] = $post;
         }
 
         $child_counts = $post_model->getChildCount($parent_ids);

@@ -96,3 +96,10 @@ ul.pagination li {
     background-color: #1B2D38;
     padding: 3px 10px;
 }
+
+.amount-hidden {
+    margin: 10px;
+    font-family: Arial, serif;
+    font-size: 14px;
+    font-style: italic;
+}

@@ -44,6 +44,11 @@
             <?php echo process_post_message($parent['message']) ?>
         </div>
     </div>
+    <?php if ($thread['post_count'] > POSTS_PER_PREVIEW): ?>
+        <div class="amount-hidden">
+            <?php echo ($thread['post_count'] - POSTS_PER_PREVIEW) . ' posts not shown. Click <a href="/thread/' . $parent['id'] . '">here</a> to view the entire thread.' ?>
+        </div>
+    <?php endif ?>
     <?php foreach ($thread['children'] as $child): ?>
         <div class="post" data-parent-id="<?php echo $parent['id']?>">
             <?php if ($child['file_id'] !== null): ?>
