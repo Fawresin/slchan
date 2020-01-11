@@ -90,15 +90,15 @@ class PostController extends BaseController {
 
         switch($type) {
             case IMAGETYPE_GIF:
-                imagegif($thumbnail, 't' . $tmp_filename);
+                imagegif($thumbnail, $tmp_filename . 't');
                 move_uploaded_file($tmp_filename, $filename);
                 break;
             case IMAGETYPE_JPEG:
-                imagejpeg($thumbnail, 't' . $tmp_filename, 100);
+                imagejpeg($thumbnail, $tmp_filename . 't', 100);
                 imagejpeg($image, $tmp_filename, 100);
                 break;
             case IMAGETYPE_PNG:
-                imagepng($thumbnail, 't' . $tmp_filename);
+                imagepng($thumbnail, $tmp_filename . 't');
                 imagepng($image, $tmp_filename);
                 break;
         }
@@ -110,7 +110,7 @@ class PostController extends BaseController {
 
         $thumbnail_filename = join_paths(DIR_IMAGES, 't' . $file_id . '.' . $ext);
         $filename = join_paths(DIR_IMAGES, $file_id . '.' . $ext);
-        rename('t' . $tmp_filename, $thumbnail_filename);
+        rename($tmp_filename . 't', $thumbnail_filename);
         rename($tmp_filename, $filename);
 
         $this->fileId = $file_id;
