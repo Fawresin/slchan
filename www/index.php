@@ -69,6 +69,9 @@ switch ($action) {
     case 'testban':
         $controller = new TestBanController();
         break;
+    case 'delete':
+        $controller = new DeletePostController();
+        break;
     default:
         $controller = new MainController();
         break;

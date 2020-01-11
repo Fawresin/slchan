@@ -22,7 +22,7 @@
             </tr>
             <tr>
                 <td><label for="txt-password">Password:</label></td>
-                <td><input id="txt-password" type="password" name="password" size="25"></td>
+                <td><input id="txt-password" type="text" name="password" size="25"></td>
             </tr>
             <tr>
                 <td></td>

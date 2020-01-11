@@ -88,7 +88,8 @@
     dickQueryResult.prototype.each = function(callback) {
         var i;
         for (i=0; i<this.elements.length; ++i) {
-            callback(this.elements[i], i);
+            if (callback(this.elements[i], i))
+                break;
         }
     };
 
@@ -167,6 +168,18 @@
             this.on(event_type, new_handler);
         }
     };
+
+    dickQueryResult.prototype.val = function(value) {
+        if (this.elements.length > 0 && 'value' in this.elements[0]) {
+            if (value === undefined)
+                return this.elements[0].value;
+
+            this.elements[0].value = value;
+        }
+        else if (value !== undefined) {
+            return '';
+        }
+    }
 
     instance.$$ = dickQuery;
 }(window));

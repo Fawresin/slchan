@@ -35,8 +35,9 @@
             </div>
         <?php endif ?>
         <p class="post-head">
+            <input type="checkbox" name="delete_id" value="<?php echo $parent['id'] ?>">
             <span class="post-subject"><?php echo $parent['subject'] ?></span>
-            <span class="post-name"><?php echo $parent['name'] ?></span>
+            <span class="post-name"><?php echo !empty($parent['name']) ? $parent['name'] : 'Anonymous' ?></span>
             <a href="/thread/<?php echo $parent['id'] ?>">No. <?php echo $parent['id'] ?></a>
             <span class="post-date" data-time="<?php echo $parent['created'] ?>"></span>
         </p>
@@ -64,8 +65,9 @@
                 </div>
             <?php endif ?>
             <p class="post-head">
+                <input type="checkbox" name="delete_id" value="<?php echo $child['id'] ?>">
                 <span class="post-subject"><?php echo $child['subject'] ?></span>
-                <span class="post-name"><?php echo $child['name'] ?></span>
+                <span class="post-name"><?php echo !empty($child['name']) ? $child['name'] : 'Anonymous' ?></span>
                 <a href="/thread/<?php echo $parent['id'] . '#' . $child['id'] ?>">No. <?php echo $child['id'] ?></a>
                 <span class="post-date" data-time="<?php echo $child['created'] ?>"></span>
             </p>
@@ -78,3 +80,5 @@
     <hr>
 <?php endforeach ?>
 <?php echo $pagination ?>
+
+<?php include(join_paths(DIR_VIEWS, 'delete-form.php')) ?>

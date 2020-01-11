@@ -103,3 +103,8 @@ ul.pagination li {
     font-size: 14px;
     font-style: italic;
 }
+
+.delete-form {
+    display: inline-block;
+    float: right;
+}

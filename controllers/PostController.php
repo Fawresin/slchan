@@ -118,20 +118,26 @@ class PostController extends BaseController {
             $subject = array_get_item('subject', $_POST);
             $message = array_get_item('message', $_POST);
             $password = array_get_item('password', $_POST);
-            if ($name !== null)
+            if (!empty($name))
                 $name = substr($name, 0, 50);
 
-            if ($subject !== null)
+            if (!empty($subject))
                 $subject = substr($subject, 0, 100);
 
             if ($this->fileId === null && ($message === null || empty(trim($message))))
                 throw new Exception('Message cannot be empty.');
             $message = substr((string)$message, 0, 3000);
 
-            if ($password !== null)
-                $password = password_hash($password, PASSWORD_DEFAULT);
-            else
-                $password = password_hash('supersecretadminpassword', PASSWORD_DEFAULT);
+            if (!empty($password)) {
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            }
+            else {
+                $password = bin2hex(random_bytes(8));
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            }
+
+            setcookie('slchan_name', $name, time() + COOKIE_EXPIRE_TIME, '/');
+            setcookie('slchan_pass', $password, time() + COOKIE_EXPIRE_TIME, '/');
 
             $ip_address = $_SERVER['REMOTE_ADDR'];
             $ban_model = new BanModel();
@@ -157,7 +163,7 @@ class PostController extends BaseController {
 
             $thread_id = array_get_item('thread_id', $_POST);
 
-            $post = $post_model->insert($name, $subject, time(), time(), $message, $this->fileId, $ip_address, $password, $thread_id, false, false);
+            $post = $post_model->insert($name, $subject, time(), time(), $message, $this->fileId, $ip_address, $password_hash, $thread_id, false, false);
             $pdo->commit();
 
             if ($thread_id !== null) {

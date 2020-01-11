@@ -5,6 +5,23 @@
         return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
     }
 
+    function getCookie(cname) {
+        var cookies = decodeURIComponent(document.cookie.replace(/\+/g, ' ')).split(';');
+        var start_index = 0;
+        for (var i=0; i<cookies.length; ++i) {
+            var c = cookies[i];
+            while (c[start_index] === ' ')
+                ++start_index;
+
+            c = c.substr(start_index);
+            if (c.indexOf(cname + '=') === 0) {
+                return c.substr(cname.length + 1);
+            }
+        }
+
+        return '';
+    }
+
     function zeroPadNumber(num) {
         if (parseInt(num, 10) < 10) {
             return '0' + num.toString();
@@ -133,6 +150,36 @@
         $$('a[href="#"]').each(function(element) {
             $$(element).on('click', function(event) {
                 $$('#txt-message').first().get().textContent += '>>' + element.dataset.id + '\n';
+            });
+        });
+
+        $$('#txt-name').val(getCookie('slchan_name'));
+        $$('#txt-password').val(getCookie('slchan_pass'));
+        $$('#txt-delete-password').val($$('#txt-password').val());
+
+        $$('#btn-delete').on('click', function(event) {
+            $$('input[name="delete_id"]').each(function(element) {
+                if (element.checked) {
+                    var id = element.value;
+                    var password = $$('#txt-delete-password').val();
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/delete';
+
+                    var input = document.createElement('input');
+                    input.name = 'id';
+                    input.value = id;
+                    form.appendChild(input);
+
+                    input = document.createElement('input');
+                    input.name = 'password';
+                    input.value = password;
+                    form.appendChild(input);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    return true;
+                }
             });
         });
     });

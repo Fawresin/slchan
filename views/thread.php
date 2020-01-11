@@ -18,8 +18,9 @@
             </div>
         <?php endif ?>
         <p class="post-head">
+            <input type="checkbox" name="delete_id" value="<?php echo $post['id'] ?>">
             <span class="post-subject"><?php echo $post['subject'] ?></span>
-            <span class="post-name"><?php echo $post['name'] ?></span>
+            <span class="post-name"><?php echo !empty($post['name']) ? $post['name'] : 'Anonymous' ?></span>
             <a href="#" data-id="<?php echo $post['id'] ?>">No. <?php echo $post['id'] ?></a>
             <span class="post-date" data-time="<?php echo $post['created'] ?>"></span>
         </p>
@@ -29,3 +30,6 @@
     </div>
     <br class="clear">
 <?php endforeach ?>
+
+<?php include(join_paths(DIR_VIEWS, 'delete-form.php')) ?>
+<br>

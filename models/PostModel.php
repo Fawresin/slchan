@@ -158,4 +158,21 @@ class PostModel {
         $stmt->execute();
         return $stmt->fetchColumn();
     }
+
+    public function getById(string $id) {
+        $pdo = NuPDO::getInstance();
+        $query = 'SELECT * FROM ' . self::TABLE . ' WHERE id = ?';
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function hideById(string $id) {
+        $pdo = NuPDO::getInstance();
+        $query = 'UPDATE ' . self::TABLE . ' SET hidden = TRUE WHERE id = ?';
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+    }
 }
