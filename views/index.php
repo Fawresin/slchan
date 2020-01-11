@@ -60,7 +60,7 @@
                         (<?php echo $child['file_width'] . ' x ' . $child['file_height'] . ' ' . $child['file_size'] . 'KB - ' . $child['file_name'] ?>)
                     </p>
                     <a href="/images/<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" target="_blank">
-                        <img src="/images/t<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" width="<?php echo $child['file_width'] ?>" height="<?php echo $parent['file_height'] ?>">
+                        <img src="/images/t<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" width="<?php echo $child['file_width'] ?>" height="<?php echo $child['file_height'] ?>">
                     </a>
                 </div>
             <?php endif ?>
