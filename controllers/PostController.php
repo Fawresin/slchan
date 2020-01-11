@@ -136,11 +136,8 @@ class PostController extends BaseController {
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
             }
 
-            if (!setcookie('slchan_name', $name, time() + COOKIE_EXPIRE_TIME, '/') or
-                !setcookie('slchan_pass', $password, time() + COOKIE_EXPIRE_TIME, '/'))
-                throw new Exception('Cookie was not set.');
-            $_COOKIE['slchan_name'] = $name;
-            $_COOKIE['slchan_pass'] = $password;
+            setcookie('slchan_name', $name, time() + COOKIE_EXPIRE_TIME, '/');
+            setcookie('slchan_pass', $password, time() + COOKIE_EXPIRE_TIME, '/');
 
             $ip_address = $_SERVER['REMOTE_ADDR'];
             $ban_model = new BanModel();
