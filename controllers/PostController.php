@@ -93,7 +93,6 @@ class PostController extends BaseController {
         switch($type) {
             case IMAGETYPE_GIF:
                 imagegif($thumbnail, $tmp_filename . 't');
-                move_uploaded_file($tmp_filename, $filename);
                 break;
             case IMAGETYPE_JPEG:
                 imagejpeg($thumbnail, $tmp_filename . 't', 100);
