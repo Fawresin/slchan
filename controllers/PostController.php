@@ -42,16 +42,18 @@ class PostController extends BaseController {
             throw new Exception('Files cannot be larger than ' . number_format(MAX_UPLOAD_FILE_SIZE_KB) . ' KB');
         }
 
-        $thumbnail_width = 0;
-        $thumbnail_height = 0;
+        $thumbnail_width = $orig_width;
+        $thumbnail_height = $orig_height;
         $aspect_ratio = $orig_width / $orig_height;
-        if ($orig_height > $orig_width) {
-            $thumbnail_height = THUMBNAIL_MAX_DIMENSION_SIZE;
-            $thumbnail_width = $thumbnail_height * $aspect_ratio;
-        }
-        else {
-            $thumbnail_width = THUMBNAIL_MAX_DIMENSION_SIZE;
-            $thumbnail_height = $thumbnail_width / $aspect_ratio;
+        if ($orig_height > THUMBNAIL_MAX_DIMENSION_SIZE || $orig_width > THUMBNAIL_MAX_DIMENSION_SIZE) {
+            if ($orig_height > $orig_width) {
+                $thumbnail_height = THUMBNAIL_MAX_DIMENSION_SIZE;
+                $thumbnail_width = $thumbnail_height * $aspect_ratio;
+            }
+            else if ($orig_width > $orig_height) {
+                $thumbnail_width = THUMBNAIL_MAX_DIMENSION_SIZE;
+                $thumbnail_height = $thumbnail_width / $aspect_ratio;
+            }
         }
 
         $image = null;
