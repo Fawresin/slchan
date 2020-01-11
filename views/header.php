@@ -12,7 +12,6 @@
             <header>
                 <h1>SLChan</h1>
                 <p>Because I don't know why</p>
-                <p style="color: red">NOTICE: Post deletion does not work since cookies will not work without a domain name!</p>
             </header>
 
             <main>
