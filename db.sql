@@ -5,8 +5,11 @@ CREATE TABLE IF NOT EXISTS files(
     extension VARCHAR(10) NOT NULL,
     width BIGINT UNSIGNED NOT NULL,
     height BIGINT UNSIGNED NOT NULL,
+    thumbnail_width BIGINT UNSIGNED NOT NULL,
+    thumbnail_height BIGINT UNSIGNED NOT NULL,
     hash VARCHAR(64) NOT NULL,
     created INT(11) UNSIGNED NOT NULL,
+    hidden BOOLEAN NOT NULL DEFAULT FALSE,
     ip_address VARCHAR(45) NOT NULL,
     CONSTRAINT uc_files_hash UNIQUE (hash)
 ) ENGINE=InnoDB;

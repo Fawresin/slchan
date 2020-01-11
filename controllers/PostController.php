@@ -23,8 +23,9 @@ class PostController extends BaseController {
         $file_model = new FileModel();
         $file = $file_model->getByHash($hash);
         if ($file !== false) {
-            // TODO: Redirect to post that has that image.
-            throw new Exception('This image has already been uploaded.');
+            // File already exists, reuse the ID without reuploading
+            $this->fileId = $file['id'];
+            return;
         }
 
         list($orig_width, $orig_height, $type) = @getimagesize($tmp_filename);
@@ -38,7 +39,7 @@ class PostController extends BaseController {
 
         $file_size = ceil(@filesize($tmp_filename) / 1024);
         if ($file_size > MAX_UPLOAD_FILE_SIZE_KB) {
-            throw new Exception('Files cannot be larger than ' . number_format(MAX_UPLOAD_FILE_SIZE_KB) . 'KB');
+            throw new Exception('Files cannot be larger than ' . number_format(MAX_UPLOAD_FILE_SIZE_KB) . ' KB');
         }
 
         $thumbnail_width = 0;
@@ -81,8 +82,6 @@ class PostController extends BaseController {
             throw new Exception('There was an error resizing the image.');
         }
 
-        $file_id = $file_model->insert($orig_filename, $file_size, $ext, $thumbnail_width, $thumbnail_height, $hash, time(), $_SERVER['REMOTE_ADDR']);
-
         if (!file_exists(DIR_IMAGES)) {
             if (!mkdir(DIR_IMAGES, 0777, true)) {
                 throw new Exception('Failed to create images directory.');
@@ -105,6 +104,11 @@ class PostController extends BaseController {
                 imagepng($image, $filename);
                 break;
         }
+
+        // Update the file size since it might have become more compressed
+        $file_size = @filesize($filename);
+
+        $file_id = $file_model->insert($orig_filename, $file_size, $ext, $orig_width, $orig_height, $thumbnail_width, $thumbnail_height, $hash, time(), $_SERVER['REMOTE_ADDR']);
 
         $this->fileId = $file_id;
     }

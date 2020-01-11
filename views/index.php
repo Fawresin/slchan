@@ -27,10 +27,10 @@
                 <p class="file-info">
                     File:
                     <a href="/images/<?php echo $parent['file_id'] . '.' . $parent['file_extension'] ?>" target="_blank"><?php $parent['file_id'] . '.' . $parent['file_extension'] ?></a>
-                    (<?php echo $parent['file_width'] . ' x ' . $parent['file_height'] . ' ' . $parent['file_size'] . 'KB - ' . $parent['file_name'] ?>)
+                    (<?php echo $parent['file_width'] . ' x ' . $parent['file_height'] . ' &nbsp;' . number_format($parent['file_size'] / 1024.0, 1) . ' KB - ' . $parent['file_name'] ?>)
                 </p>
                 <a href="/images/<?php echo $parent['file_id'] . '.' . $parent['file_extension'] ?>" target="_blank">
-                    <img src="/images/t<?php echo $parent['file_id'] . '.' . $parent['file_extension'] ?>" width="<?php echo $parent['file_width'] ?>" height="<?php echo $parent['file_height'] ?>">
+                    <img src="/images/t<?php echo $parent['file_id'] . '.' . $parent['file_extension'] ?>" width="<?php echo $parent['file_thumbnail_width'] ?>" height="<?php echo $parent['file_thumbnail_height'] ?>">
                 </a>
             </div>
         <?php endif ?>
@@ -40,6 +40,7 @@
             <span class="post-name"><?php echo !empty($parent['name']) ? $parent['name'] : 'Anonymous' ?></span>
             <a href="/thread/<?php echo $parent['id'] ?>">No. <?php echo $parent['id'] ?></a>
             <span class="post-date" data-time="<?php echo $parent['created'] ?>"></span>
+            <a href="/thread/<?php echo $parent['id'] ?>">Reply</a>
         </p>
         <div class="post-body">
             <?php echo process_post_message($parent['message']) ?>
@@ -57,10 +58,10 @@
                     <p class="file-info">
                         File:
                         <a herf="/images/<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" target="_blank"><?php $child['file_id'] . '.' . $child['file_extension'] ?></a>
-                        (<?php echo $child['file_width'] . ' x ' . $child['file_height'] . ' ' . $child['file_size'] . 'KB - ' . $child['file_name'] ?>)
+                        (<?php echo $child['file_width'] . ' x ' . $child['file_height'] . ' &nbsp;' . number_format($child['file_size'] / 1024.0, 1) . ' KB - ' . $child['file_name'] ?>)
                     </p>
                     <a href="/images/<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" target="_blank">
-                        <img src="/images/t<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" width="<?php echo $child['file_width'] ?>" height="<?php echo $child['file_height'] ?>">
+                        <img src="/images/t<?php echo $child['file_id'] . '.' . $child['file_extension'] ?>" width="<?php echo $child['file_thumbnail_width'] ?>" height="<?php echo $child['file_thumbnail_height'] ?>">
                     </a>
                 </div>
             <?php endif ?>
@@ -70,6 +71,7 @@
                 <span class="post-name"><?php echo !empty($child['name']) ? $child['name'] : 'Anonymous' ?></span>
                 <a href="/thread/<?php echo $parent['id'] . '#' . $child['id'] ?>">No. <?php echo $child['id'] ?></a>
                 <span class="post-date" data-time="<?php echo $child['created'] ?>"></span>
+                <a href="/thread/<?php echo $parent['id'] . '#' . $child['id'] ?>">Reply</a>
             </p>
             <div class="post-body">
                 <?php echo process_post_message($child['message']) ?>

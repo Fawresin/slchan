@@ -10,10 +10,10 @@
                 <p class="fileinfo">
                     File:
                     <a href="/images/<?php echo $post['file_id'] . '.' . $post['file_extension'] ?>" target="_blank"><?php $post['file_id'] . '.' . $post['file_extension'] ?></a>
-                    (<?php echo $post['file_width'] . ' x ' . $post['file_height'] . ' ' . $post['file_size'] . 'KB - ' . $post['file_name'] ?>)
+                    (<?php echo $post['file_width'] . ' x ' . $post['file_height'] . ' &nbsp;' . number_format($post['file_size'] / 1024.0, 1) . ' KB - ' . $post['file_name'] ?>)
                 </p>
                 <a href="/images/<?php echo $post['file_id'] . '.' . $post['file_extension'] ?>" target="_blank">
-                    <img src="/images/t<?php echo $post['file_id'] . '.' . $post['file_extension'] ?>" width="<?php echo $post['file_width'] ?>" height="<?php echo $post['file_height'] ?>">
+                    <img src="/images/t<?php echo $post['file_id'] . '.' . $post['file_extension'] ?>" width="<?php echo $post['file_thumbnail_width'] ?>" height="<?php echo $post['file_thumbnail_height'] ?>">
                 </a>
             </div>
         <?php endif ?>

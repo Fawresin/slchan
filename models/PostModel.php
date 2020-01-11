@@ -49,7 +49,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
+        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height, $files.thumbnail_width AS file_thumbnail_width, $files.thumbnail_height AS file_thumbnail_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id = ? AND $posts.hidden = ?
             ORDER BY $posts.created ASC");
@@ -63,7 +63,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
+        $stmt = $pdo->prepare("SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height, $files.thumbnail_width AS file_thumbnail_width, $files.thumbnail_height AS file_thumbnail_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id IS NULL AND $posts.hidden = ?
             ORDER BY $posts.last_updated DESC
@@ -84,7 +84,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $query = "SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height FROM $posts
+        $query = "SELECT $posts.*, $files.id AS file_id, $files.name AS file_name, $files.size AS file_size, $files.extension AS file_extension, $files.width AS file_width, $files.height AS file_height, $files.thumbnail_width AS file_thumbnail_width, $files.thumbnail_height AS file_thumbnail_height FROM $posts
             LEFT JOIN $files ON $posts.file_id = $files.id
             WHERE $posts.parent_id IN ( ";
         for ($i=0; $i<$ids_length; ++$i) {
@@ -131,7 +131,7 @@ class PostModel {
         $pdo = NuPDO::getInstance();
         $posts = self::TABLE;
         $files = FileModel::TABLE;
-        $query = "SELECT $posts.*, $files.name AS file_name, $files.size AS file_size, $files.extension as file_extension, $files.width as file_width, $files.height as file_height FROM $posts
+        $query = "SELECT $posts.*, $files.name AS file_name, $files.size AS file_size, $files.extension as file_extension, $files.width as file_width, $files.height as file_height, $files.thumbnail_width AS file_thumbnail_width, $files.thumbnail_height AS file_thumbnail_height FROM $posts
         LEFT JOIN $files ON $posts.file_id = $files.id
         WHERE ($posts.id = :id OR $posts.parent_id = :id) AND $posts.hidden = :hidden
         ORDER BY $posts.created ASC";
