@@ -21,7 +21,8 @@ class DeletePostController extends BaseController {
 
             $post_model->hideById($post_id);
             $file_model = new FileModel();
-            $file_model->hideById($post['file_id']);
+            if ($post['file_id'] !== null)
+                $file_model->hideById($post['file_id']);
 
             $this->redirect('/');
         }
