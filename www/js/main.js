@@ -31,55 +31,13 @@
     }
 
     function getDayShortText(day) {
-        switch (day) {
-            case 0:
-                return 'Mon';
-            case 1:
-                return 'Tue';
-            case 2:
-                return 'Wed';
-            case 3:
-                return 'Thu';
-            case 4:
-                return 'Fri';
-            case 5:
-                return 'Sat';
-            case 6:
-                return 'Sun';
-        }
-
-        return 'Unknown';
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return days[day];
     }
 
     function getMonthShortText(month) {
-        switch (month) {
-            case 0:
-                return 'Jan';
-            case 1:
-                return 'Feb';
-            case 2:
-                return 'Mar';
-            case 3:
-                return 'Apr';
-            case 4:
-                return 'May';
-            case 5:
-                return 'Jun';
-            case 6:
-                return 'Jul';
-            case 7:
-                return 'Aug';
-            case 8:
-                return 'Sep';
-            case 9:
-                return 'Oct';
-            case 10:
-                return 'Nov';
-            case 11:
-                return 'Dec';
-        }
-
-        return 'Unknown';
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return months[month];
     }
 
     $$(window).one('load', function(e) {
